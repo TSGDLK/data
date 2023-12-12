@@ -1,0 +1,45 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#CSV 파일 경로
+file_path = 'C:/Users/eheh9/Desktop/DATA/A Company_Supplement_Sales_Data_v1.csv'
+
+#CSV 파일 Pandas DataFrame으로 읽기
+#공백으로 구분된 파일이므로 delimiter 옵션을 사용하여 공백으로 지정
+df = pd.read_csv(file_path, delimiter=',', engine='python')
+
+#데이터 프레임 내 숫자 데이터에서 달러 기호($)와 쉼표(,) 제거 후 숫자 형식으로 변환
+columns = df.columns[1:]  #첫 번째 열은 인덱스
+for col in columns:
+    df[col] = df[col].replace({'\$': '', ',': ''}, regex=True).astype(float)
+
+#총 매출, 목표 매출 비교 꺾은선 그래프
+plt.figure(figsize=(10, 6))
+plt.plot(df.columns[1:], df.iloc[0, 1:], marker='o', label='Total Sales')
+plt.plot(df.columns[1:], df.iloc[1, 1:], marker='o', label='Target Sales')
+plt.title('Comparison of Total Sales and Target Sales')
+plt.xlabel('Months')
+plt.ylabel('Sales')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+#광고비용과 소셜네트워크비용 꺾은선 그래프
+plt.figure(figsize=(10, 6))
+plt.plot(df.columns[1:], df.iloc[2, 1:], marker='o', label='Ad Costs')
+plt.plot(df.columns[1:], df.iloc[3, 1:], marker='o', label='Social Costs')
+plt.title('Comparison of Ad Costs and Social Costs')
+plt.xlabel('Months')
+plt.ylabel('Costs')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+#총 매출과 소셜네트워크비용 산점도
+plt.figure(figsize=(8, 6))
+plt.scatter(df.iloc[0, 1:], df.iloc[3, 1:], color='purple')
+plt.title('Scatter Plot of Total Sales and Social Costs')
+plt.xlabel('Total Sales')
+plt.ylabel('Social Costs')
+plt.grid(True)
+plt.show()
